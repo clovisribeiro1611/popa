@@ -1,0 +1,20 @@
+{
+  "appId": "cv.popa.app",
+  "appName": "POPA",
+  "webDir": "dist",
+  "android": {
+    "allowMixedContent": false
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 600,
+      "launchAutoHide": true,
+      "backgroundColor": "#0F766E",
+      "showSpinner": false
+    },
+    "LocalNotifications": {
+      "smallIcon": "ic_stat_popa",
+      "iconColor": "#0F766E"
+    }
+  }
+}

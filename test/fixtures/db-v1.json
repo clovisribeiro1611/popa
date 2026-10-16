@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "meta": { "criadoEm": "2026-08-01T10:00:00.000Z", "atualizadoEm": "2026-10-14T20:00:00.000Z", "ultimoBackup": "2026-10-14", "ultimaVerificacaoRecorrencias": "2026-10-14" },
+  "settings": {
+    "moeda": "CVE", "casasDecimais": 2, "primeiroDiaDoMes": 25, "tema": "escuro", "contaPorDefeito": "acc-carteira", "seedAtivo": false,
+    "bloqueio": { "ativo": true, "biometria": true, "pinHash": "aGFzaA==", "pinSalt": "c2FsdA==", "pinLen": 4 }
+  },
+  "accounts": [
+    { "id": "acc-carteira", "nome": "Carteira", "tipo": "numerario", "saldoInicial": 500000, "arquivada": false, "ordem": 0 },
+    { "id": "acc-bca", "nome": "BCA", "tipo": "conta", "saldoInicial": 4500000, "arquivada": false, "ordem": 1 },
+    { "id": "acc-poup", "nome": "Poupança", "tipo": "poupanca", "saldoInicial": 2000000, "arquivada": false, "ordem": 2 }
+  ],
+  "categories": [
+    { "id": "c-super", "nome": "Supermercado", "tipo": "despesa", "cor": "#E4572E", "icone": "🛒", "orcamentoMensal": 2000000, "favorita": true, "arquivada": false, "ordem": 0 },
+    { "id": "c-rest", "nome": "Restauração", "tipo": "despesa", "cor": "#F3A712", "icone": "🍽️", "orcamentoMensal": null, "favorita": true, "arquivada": false, "ordem": 1 },
+    { "id": "c-transp", "nome": "Transportes", "tipo": "despesa", "cor": "#4C6EF5", "icone": "🚌", "orcamentoMensal": 300000, "favorita": true, "arquivada": false, "ordem": 2 },
+    { "id": "c-casa", "nome": "Casa", "tipo": "despesa", "cor": "#7950F2", "icone": "🏠", "orcamentoMensal": 1500000, "favorita": true, "arquivada": false, "ordem": 3 },
+    { "id": "c-saude", "nome": "Saúde", "tipo": "despesa", "cor": "#E64980", "icone": "💊", "orcamentoMensal": null, "favorita": false, "arquivada": false, "ordem": 4 },
+    { "id": "c-educ", "nome": "Educação", "tipo": "despesa", "cor": "#1098AD", "icone": "📚", "orcamentoMensal": null, "favorita": false, "arquivada": false, "ordem": 5 },
+    { "id": "c-lazer", "nome": "Lazer", "tipo": "despesa", "cor": "#12B886", "icone": "🎉", "orcamentoMensal": 200000, "favorita": false, "arquivada": false, "ordem": 6 },
+    { "id": "c-com", "nome": "Comunicações", "tipo": "despesa", "cor": "#868E96", "icone": "📱", "orcamentoMensal": null, "favorita": false, "arquivada": false, "ordem": 7 },
+    { "id": "c-outras", "nome": "Outras despesas", "tipo": "despesa", "cor": "#495057", "icone": "📦", "orcamentoMensal": null, "favorita": false, "arquivada": false, "ordem": 8 },
+    { "id": "c-sal", "nome": "Salário", "tipo": "receita", "cor": "#2B8A3E", "icone": "💼", "orcamentoMensal": null, "favorita": true, "arquivada": false, "ordem": 0 },
+    { "id": "c-outrasr", "nome": "Outras receitas", "tipo": "receita", "cor": "#5C940D", "icone": "💰", "orcamentoMensal": null, "favorita": false, "arquivada": false, "ordem": 1 }
+  ],
+  "transactions": [
+    { "id": "t1", "data": "2026-09-25", "valor": 7000000, "tipo": "receita", "contaId": "acc-bca", "contaDestinoId": null, "categoriaId": "c-sal", "descricao": "Salário", "notas": "", "recorrenteId": "r-sal", "criadoEm": "2026-09-25T08:00:00.000Z" },
+    { "id": "t2", "data": "2026-09-26", "valor": 1500000, "tipo": "despesa", "contaId": "acc-bca", "contaDestinoId": null, "categoriaId": "c-casa", "descricao": "Renda", "notas": "", "recorrenteId": null, "criadoEm": "2026-09-26T08:00:00.000Z" },
+    { "id": "t3", "data": "2026-10-02", "valor": 452050, "tipo": "despesa", "contaId": "acc-carteira", "contaDestinoId": null, "categoriaId": "c-super", "descricao": "Compras; \"semana\"", "notas": "pão, leite", "recorrenteId": null, "criadoEm": "2026-10-02T18:00:00.000Z" },
+    { "id": "t4", "data": "2026-10-03", "valor": 1000000, "tipo": "transferencia", "contaId": "acc-bca", "contaDestinoId": "acc-poup", "categoriaId": null, "descricao": "Poupança", "notas": "", "recorrenteId": null, "criadoEm": "2026-10-03T09:00:00.000Z" }
+  ],
+  "recurring": [
+    { "id": "r-sal", "descricao": "Salário", "valor": 7000000, "tipo": "receita", "periodicidade": "mensal", "intervalo": 1, "diaAncora": 25, "proximaData": "2026-10-25", "dataFim": null, "ativo": true, "contaId": "acc-bca", "contaDestinoId": null, "categoriaId": "c-sal" }
+  ],
+  "goals": [
+    { "id": "g1", "nome": "Fundo de férias", "valorAlvo": 5000000, "valorAtual": 1200000, "prazo": "2027-07-31", "cor": "#4C6EF5" }
+  ]
+}

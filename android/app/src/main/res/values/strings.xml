@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">POPA</string>
+    <string name="title_activity_main">POPA</string>
+    <string name="package_name">cv.popa.app</string>
+    <string name="custom_url_scheme">cv.popa.app</string>
+</resources>

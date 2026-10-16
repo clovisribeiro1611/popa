@@ -1,0 +1,31 @@
+{
+  "name": "popa",
+  "version": "1.0.0",
+  "private": true,
+  "description": "POPA - orçamento pessoal offline (Capacitor/Android)",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "build:web": "vite build --mode web",
+    "test": "node --test test/",
+    "sync": "npm run build && cap sync android",
+    "assets": "node scripts/gen-assets.mjs",
+    "keystore": "node scripts/gen-keystore.mjs"
+  },
+  "dependencies": {
+    "@aparajita/capacitor-biometric-auth": "10.0.0",
+    "@capacitor/android": "8.5.3",
+    "@capacitor/app": "8.1.2",
+    "@capacitor/core": "8.5.3",
+    "@capacitor/filesystem": "8.1.5",
+    "@capacitor/local-notifications": "8.3.1",
+    "@capacitor/share": "8.0.3",
+    "@capacitor/splash-screen": "8.0.2"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "8.5.3",
+    "fake-indexeddb": "6.2.5",
+    "vite": "8.3.4"
+  }
+}

@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="pt-PT" data-theme="auto">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+  <meta name="theme-color" content="#F6F7F9">
+  <meta name="color-scheme" content="light dark">
+  <title>POPA</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <button id="back" class="icon-btn" aria-label="Voltar" hidden>
+      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <h1 id="title">POPA</h1>
+    <span class="brand">POPA</span>
+  </header>
+
+  <main id="view"></main>
+
+  <nav id="nav">
+    <a href="#/inicio" data-nav="inicio"><svg class="ico" viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 9.5V21h5v-6h4v6h5V9.5"/></svg><span>Início</span></a>
+    <a href="#/movimentos" data-nav="movimentos"><svg class="ico" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg><span>Movimentos</span></a>
+    <button id="fab" aria-label="Registar movimento"><svg class="ico" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span class="fab-label">Registar movimento</span></button>
+    <a href="#/plano" data-nav="plano"><svg class="ico" viewBox="0 0 24 24"><path d="M8 3v4M16 3v4M3 9h18M5 5h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Zm3 9h3m2 0h3m-8 4h3"/></svg><span>Plano</span></a>
+    <a href="#/mais" data-nav="mais"><svg class="ico" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span>Mais</span></a>
+  </nav>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+# Compila o APK assinado a cada push para main (ou manualmente em Actions → "Build APK" → Run workflow).
+# Resultado: artefacto descarregável + GitHub Release com o .apk direto (mais fácil de abrir no telemóvel).
+# Não mudar o nome deste ficheiro: o versionCode vem de github.run_number, que recomeça se o workflow mudar.
+name: Build APK
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write   # necessário para criar a Release
+
+concurrency:
+  group: apk-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      VERSION_CODE: ${{ github.run_number }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Versão
+        run: |
+          BASE=$(node -p "require('./package.json').version.split('.').slice(0,2).join('.')")
+          echo "VERSION_NAME=${BASE}.${GITHUB_RUN_NUMBER}" >> "$GITHUB_ENV"
+          echo "APP_VERSION=${BASE}.${GITHUB_RUN_NUMBER}" >> "$GITHUB_ENV"
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Dependências
+        run: npm ci
+
+      - name: Testes
+        run: npm test
+
+      - name: Build web + sync Android
+        run: |
+          npm run build
+          # O APK não usa service worker nem manifest da PWA.
+          test ! -e dist/sw.js && test ! -e dist/manifest.webmanifest
+          npx cap sync android
+
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - uses: gradle/actions/setup-gradle@v6
+
+      - name: Keystore
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+        run: |
+          # Sem keystore não se gera APK: um APK assinado com outra chave não instala por cima do atual.
+          if [ -z "$KEYSTORE_BASE64" ] || [ -z "$KEYSTORE_PASSWORD" ] || [ -z "$KEY_ALIAS" ]; then
+            echo "::error::Faltam os secrets KEYSTORE_BASE64, KEYSTORE_PASSWORD e/ou KEY_ALIAS. Ver README, secção 'Assinatura'."
+            exit 1
+          fi
+          echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/popa-release.keystore"
+          echo "KEYSTORE_FILE=$RUNNER_TEMP/popa-release.keystore" >> "$GITHUB_ENV"
+
+      - name: Gradle assembleRelease
+        working-directory: android
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleRelease --no-daemon --stacktrace
+
+      - name: Verificar assinatura e preparar APK
+        run: |
+          APK=android/app/build/outputs/apk/release/app-release.apk
+          test -f "$APK" || { echo "::error::APK assinado não encontrado"; ls -R android/app/build/outputs/apk; exit 1; }
+          BT=$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)
+          "$BT/apksigner" verify --print-certs "$APK" | head -5
+          mkdir -p out
+          cp "$APK" "out/popa-${VERSION_NAME}.apk"
+          rm -f "$RUNNER_TEMP/popa-release.keystore"
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: popa-${{ env.VERSION_NAME }}
+          path: out/popa-${{ env.VERSION_NAME }}.apk
+          retention-days: 30
+
+      - name: GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "v${VERSION_NAME}" "out/popa-${VERSION_NAME}.apk" \
+            --title "POPA ${VERSION_NAME}" \
+            --notes "APK assinado gerado a partir de ${GITHUB_SHA::7}. Descarregue o .apk no telemóvel e instale por cima da versão anterior." \
+            --target "$GITHUB_SHA"

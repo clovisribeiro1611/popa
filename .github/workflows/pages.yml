@@ -1,0 +1,68 @@
+# Publica a versão web (PWA) no GitHub Pages a cada push para main (ou manualmente).
+# O site só contém código: os dados de cada pessoa ficam no navegador dela (IndexedDB).
+# Requisito: Settings → Pages → Source = "GitHub Actions".
+name: Publicar web
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Versão
+        run: |
+          BASE=$(node -p "require('./package.json').version.split('.').slice(0,2).join('.')")
+          echo "APP_VERSION=${BASE}.${GITHUB_RUN_NUMBER}-web" >> "$GITHUB_ENV"
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Dependências
+        run: npm ci
+
+      - name: Testes
+        run: npm test
+
+      - name: Build web (PWA)
+        run: npm run build:web
+
+      - name: Verificar que não vão dados pessoais
+        run: |
+          # Só código e ícones: nenhum db.json, backup ou exportação pode ir para o site.
+          if find dist-web -iname '*.json' ! -name 'manifest.webmanifest' | grep -q .; then
+            echo "::error::Encontrado um ficheiro .json no build web"; find dist-web -iname '*.json'; exit 1
+          fi
+          test -f dist-web/sw.js && test -f dist-web/manifest.webmanifest
+
+      - uses: actions/configure-pages@v6
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist-web
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5
