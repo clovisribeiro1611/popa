@@ -8,7 +8,7 @@
     "dev": "vite",
     "build": "vite build",
     "build:web": "vite build --mode web",
-    "test": "node --test test/",
+    "test": "node --test",
     "sync": "npm run build && cap sync android",
     "assets": "node scripts/gen-assets.mjs",
     "keystore": "node scripts/gen-keystore.mjs"
